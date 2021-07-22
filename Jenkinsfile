@@ -1,19 +1,33 @@
 pipeline {
-    agent none 
+    agent none
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
-        stage('Example Build') {
-            agent { docker 'maven:3.8.1-adoptopenjdk-11' } 
+        stage('Build') {
+            agent {
+                docker  'python:2-alpine'
+                }
+            
             steps {
-                echo 'Hello, Maven'
-                sh 'mvn --version'
+                sh 'python -m py_compile sources/add2vals.py sources/calc.py'
+                stash(name: 'compiled-results', includes: 'sources/*.py*')
             }
         }
-        stage('Example Test') {
-            agent { docker 'openjdk:8-jre' } 
+        stage('Test') {
+            agent {
+                docker  'qnib/pytest'
+                }
+            
             steps {
-                echo 'Hello, JDK'
-                sh 'java -version'
+                sh 'py.test --junit-xml test-reports/results.xml sources/test_calc.py'
+            }
+            post {
+                always {
+                    junit 'test-reports/results.xml'
+                }
             }
         }
+
     }
 }
