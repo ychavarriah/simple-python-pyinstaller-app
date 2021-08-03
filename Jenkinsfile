@@ -14,7 +14,7 @@ pipeline {
                 stash(name: 'compiled-results', includes: 'sources/*.py*')
             }
         }
-        stage('Test_5') {
+        stage('Test_6') {
             agent {
                 docker  'qnib/pytest'
                 }
