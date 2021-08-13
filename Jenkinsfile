@@ -50,10 +50,11 @@ pipeline {
             }
         }
 	stage('Deploy'){
-	   steps{
-	    sh 'ssh root@172.30.201.78 rm -rf /opt/pruebas/'
-	    sh 'ssh root@172.30.201.78 mkdir -p /opt/pruebas'
-	    sh 'scp -r dist root@172.30.201.78:/opt/pruebas/'
+	    agent any
+	    steps{
+	    	sh 'ssh root@172.30.201.78 rm -rf /opt/pruebas/'
+	    	sh 'ssh root@172.30.201.78 mkdir -p /opt/pruebas'
+	    	sh 'scp -r dist root@172.30.201.78:/opt/pruebas/'
 	   }
 	}
     }
